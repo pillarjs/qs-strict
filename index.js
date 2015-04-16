@@ -8,6 +8,8 @@ var methods = [
   'unescapeBuffer',
   'unescape',
   'escape',
+  'stringify',
+  'encode',
 ];
 
 methods.forEach(function (method) {
@@ -18,47 +20,6 @@ methods.forEach(function (method) {
  * Everything below this comment is basically copied from io.js
  * As of version: https://github.com/iojs/io.js/blob/10e31ba56c676bdcad39ccad22ea9117733b8eb5/lib/querystring.js
  */
-
-var stringifyPrimitive = function(v) {
-  if (typeof v === 'string')
-    return v;
-  if (typeof v === 'number' && isFinite(v))
-    return '' + v;
-  if (typeof v === 'boolean')
-    return v ? 'true' : 'false';
-  return '';
-};
-
-QueryString.stringify = QueryString.encode = function(obj, sep, eq, options) {
-  sep = sep || '&';
-  eq = eq || '=';
-
-  var encode = QueryString.escape;
-  if (options && typeof options.encodeURIComponent === 'function') {
-    encode = options.encodeURIComponent;
-  }
-
-  if (obj !== null && typeof obj === 'object') {
-    var keys = Object.keys(obj);
-    var len = keys.length;
-    var flast = len - 1;
-    var fields = '';
-    for (var i = 0; i < len; ++i) {
-      var k = keys[i];
-      var v = obj[k];
-      var ks = encode(stringifyPrimitive(k)) + eq;
-
-      if (Array.isArray(v))
-        v = v.join(',');
-
-      fields += ks + encode(stringifyPrimitive(v));
-      if (i < flast)
-        fields += sep;
-    }
-    return fields;
-  }
-  return '';
-};
 
 // Parse a key=val string.
 QueryString.parse = QueryString.decode = function(qs, sep, eq, options) {
@@ -89,7 +50,6 @@ QueryString.parse = QueryString.decode = function(qs, sep, eq, options) {
     decode = options.decodeURIComponent;
   }
 
-  var keys = [];
   for (var i = 0; i < len; ++i) {
     var x = qs[i].replace(regexp, '%20'),
         idx = x.indexOf(eq),

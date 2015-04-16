@@ -18,8 +18,6 @@ so you never have to check its type.
 
 A drop-in implementation for `require('querystring')`.
 
-### qs.stringify()
-
 ### qs.parse()
 
 [npm-image]: https://img.shields.io/npm/v/qs-strict.svg?style=flat-square
